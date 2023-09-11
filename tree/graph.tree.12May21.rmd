@@ -1,0 +1,143 @@
+---
+title: "Graph Tree"
+author: "Barry von Tobel"
+date: "1/18/2021"
+output: 
+  html_document:
+  toc: true
+toc_float: true
+toc_collapsed: true
+number_sections: true
+toc_depth: 3
+theme: tufte::tufte_html
+# theme: lumen
+editor_options: 
+  chunk_output_type: console
+---
+# Graph Examples
+####
+```{r initial, echo=FALSE}
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph/tree")
+#setwd("C:/Users/bvt/Dropbox/eng_science/R/wd/tle")
+# https://www.r-graph-gallery.com/334-basic-dendrogram-with-ggraph.html - tree tutorial
+# https://eehh-stanford.github.io/SNA-workshop/intro-igraph.html
+# http://r-israel.com/wp-content/uploads/2014/12/r-igraph-workshop_final.pdf
+###-----------###
+options(scipen=999)
+#Load required packages
+
+library(ggraph)
+library(tidygraph)
+library(igraph)
+library(rlang)
+library(tidyverse)
+library(purrr)
+library(dplyr)
+```
+
+```{r edges, echo=FALSE}
+# https://www.r-bloggers.com/2017/02/introduction-to-ggraph-edges/ - Edges
+# https://www.rdocumentation.org/packages/tree/versions/1.0-40/topics/tree - Classification
+hierarchy <- as.dendrogram(hclust(dist(iris[, 1:4])))
+# Classify nodes based on agreement between children
+hierarchy <- map_bfs(hierarchy, ...) 
+  {
+    if (is.leaf(node)) {
+        attr(node, 'Class') <- as.character(iris[as.integer(attr(node, 'label')),5])
+    } else {
+        classes <- unique(sapply(children, attr, which = 'Class'))
+        if (length(classes) == 1 && !anyNA(classes)) {
+            attr(node, 'Class') <- classes
+        } else {
+            attr(node, 'Class') <- NA
+        }
+    }
+    attr(node, 'nodePar') <- list(class = attr(node, 'Class'))
+    node
+}, direction = 'up')
+hairball <- graph_from_data_frame(highschool)
+
+```
+
+stress - hairball edges example 1
+```{r hairball.1}
+# https://cran.r-project.org/web/packages/ggraph/vignettes/Edges.html
+
+hairball <- as_tbl_graph(highschool) %>% 
+  mutate(
+    year_pop = map_local(mode = 'in', .f = function(neighborhood, ...) {
+      neighborhood %E>% pull(year) %>% table() %>% sort(decreasing = TRUE)
+    }),
+    pop_devel = map_chr(year_pop, function(pop) {
+      if (length(pop) == 0 || length(unique(pop)) == 1) return('unchanged')
+      switch(names(pop)[which.max(pop)],
+             '1957' = 'decreased',
+             '1958' = 'increased')
+    }),
+    popularity = map_dbl(year_pop, ~ .[1]) %|% 0
+  ) %>% 
+  activate(edges) %>% 
+  mutate(year = as.character(year))
+
+ggraph(hairball, layout = 'stress') + 
+  geom_edge_link(aes(colour = year))
+
+ggraph(hairball, layout = 'stress') + 
+  geom_edge_fan(aes(colour = year))
+
+ggraph(hairball, layout = 'stress') + 
+  geom_edge_parallel(aes(colour = year))
+
+# let's make some of the student love themselves
+loopy_hairball <- hairball %>% 
+  bind_edges(tibble::tibble(from = 1:5, to = 1:5, year = rep('1957', 5)))
+ggraph(loopy_hairball, layout = 'stress') + 
+  geom_edge_link(aes(colour = year), alpha = 0.25) + 
+  geom_edge_loop(aes(colour = year))
+# density
+ggraph(hairball, layout = 'stress') + 
+  geom_edge_density(aes(fill = year)) + 
+  geom_edge_link(alpha = 0.25)
+# Archs
+ggraph(hairball, layout = 'linear') + 
+  geom_edge_arc(aes(colour = year))
+# Elbows
+ggraph(hierarchy, layout = 'dendrogram', height = height) + 
+  geom_edge_elbow()
+# Diagonals
+ggraph(hierarchy, layout = 'dendrogram', height = height) + 
+  geom_edge_diagonal()
+#Hive
+graph(hairball, layout = 'hive', axis = pop_devel, sort.by = popularity) + 
+  geom_edge_hive(aes(colour = year)) + 
+  geom_axis_hive(label = FALSE) + 
+  coord_fixed()
+# Span
+ggraph(hairball, layout = 'fabric', sort.by = node_rank_fabric()) + 
+  geom_node_range(colour = 'grey') + 
+  geom_edge_span(end_shape = 'circle') + 
+  coord_fixed()
+
+```
+
+
+
+```{r spare3}
+
+
+
+
+ 
+ # https://www.data-imaginist.com/2017/ggraph-introduction-layouts/
+ x <- 3
+ print(x)
+ 
+```
+
+
+```{r spare1}
+
+```
+
+t
+ 

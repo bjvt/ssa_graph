@@ -1,0 +1,171 @@
+---
+title: "STM Social Network"
+author: "Barry von Tobel"
+date: "3/30/2021"
+output: 
+  html_document:
+  toc: true
+toc_float: true
+toc_collapsed: true
+number_sections: true
+toc_depth: 3
+theme: tufte::tufte_html
+# theme: lumen
+editor_options: 
+  chunk_output_type: console
+---
+# Graph Examples
+# 
+
+####
+```{r initial, echo=FALSE}
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph")
+
+#  https://github.com/kassambara/navdata/
+# https://i.pinimg.com/originals/2d/71/ad/2d71adbb5ce0919764a4e3475ac774fa.png
+# http://www.sthda.com/english/articles/33-social-network-analysis/135-network-visualization-essentials-in-r/
+#options(scipen=999)
+#Load required packages
+#if(!require(devtools)) install.packages("devtools")
+#devtools::install_github("kassambara/navdata")
+shh <- suppressPackageStartupMessages # It's a library
+shh(library("navdata"))
+shh(library("tidyverse"))
+shh(library("igraph"))
+shh(library("ggraph"))
+shh(library("tidygraph"))
+
+```
+This graph is created with Library igraph, and plotd with plot()
+Data is an Edglist csv file with columns "source, destination, attributes (only 1 now)
+```{r graph1, echo=FALSE}
+
+## Igraph network object
+# load the data csv file
+# make a df of the net.igraph, just to understand its architecture
+# igraph.1 is the STM data
+df.igraph.1 <- read.csv("node_text.csv")
+# convert to Igraph format
+net.igraph.1 <- graph_from_data_frame(df.igraph.1)
+
+##
+set.seed(123)
+# create network object with igraph
+plot(net.igraph.1, edge.arrow.size = 0.04,
+     vertex.color = rgb(0.8,0.2,0.2,0.9),
+     #vertex.shape=c("circle","square"),
+     #vertex.size=c(15:24),
+     #vertex.size2=NA, 
+     layout = layout_with_graphopt)
+#   ?plot.igraph, for more options to customize the plot. 
+```
+TK Plot
+plot(net.igraph.1,
+    layout = layout with_kk)
+
+
+```{r tkplots, echo=FALSE}
+#tkplot(net.igraph.1)
+plot(net.igraph.1, edge.arrow.size = 0.04,
+    #vertex.label.dist=1.0,
+    #vertex.shapes()
+    layout = layout_with_kk)
+
+# Create data
+
+```
+
+This one is done with R Library ggraph
+
+```{r ggraph1, echo=FALSE}
+ # copy file action from other endeavor
+df.igraph.1 <- read.csv("node_text.csv")
+# convert to Igraph format
+net.igraph.1 <- graph_from_data_frame(df.igraph.1)
+net.tidy.1 <- net.igraph.1
+#make a table graph - don't remember what this does
+x <- as_tbl_graph(net.tidy.1)
+# layout, graphopt,kk
+ggraph(net.tidy.1, layout = "kk") + 
+  geom_node_point() +
+  geom_edge_link(width = 1, colour = "lightgray") +
+  geom_node_point(size = 4, colour = "#00AFBB") +
+  geom_edge_link(aes(width = weight * 0.5), alpha = 0.8) + 
+  scale_edge_width(range = c(0.2, 2)) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  labs(edge_width = "logical network type") +
+  theme_graph()
+# don't delete this yet
+#clu <- components(net.tidy.1, mode = c("weak", "strong"))
+#groups(clu)
+```
+
+
+```{r test1, eval=FALSE, warning=FALSE, include=FALSE}
+# https://www.r-bloggers.com/2017/02/introduction-to-ggraph-edges/ - Edges
+hierarchy <- as.dendrogram(hclust(dist(iris[, 1:4])))
+# Classify nodes based on agreement between children
+hierarchy <- tree_apply(hierarchy, function(node, children, ...) {
+    if (is.leaf(node)) {
+        attr(node, 'Class') <- as.character(iris[as.integer(attr(node, 'label')),5])
+    } else {
+        classes <- unique(sapply(children, attr, which = 'Class'))
+        if (length(classes) == 1 && !anyNA(classes)) {
+            attr(node, 'Class') <- classes
+        } else {
+            attr(node, 'Class') <- NA
+        }
+    }
+    attr(node, 'nodePar') <- list(class = attr(node, 'Class'))
+    node
+}, direction = 'up')
+hairball <- graph_from_data_frame(highschool)
+
+
+
+```
+
+text
+```{r geom_edge_link.1, echo=TRUE}
+# https://rdrr.io/cran/ggraph/man/geom_edge_link.html
+# example of using geom_edge_link
+library(ggraph)
+
+require(tidygraph)
+gr <- create_notable('Coxeter') %>%
+  mutate(class = sample(letters[1:3], n(), replace = TRUE)) %>%
+  # check out these pipes sometimes , he %N>% and %E>% pipes
+  activate(edges) %>%
+  mutate(class = sample(letters[1:3], n(), replace = TRUE))
+df.gr <- as.data.frame(gr)
+ggraph(gr, 'stress') +
+  geom_edge_link(aes(alpha = stat(index)))
+
+ggraph(gr, 'stress') +
+  geom_edge_link2(aes(colour = node.class))
+
+ggraph(gr, 'stress') +
+  geom_edge_link0(aes(colour = class))
+
+```
+
+```{r geom_edge_link.1, echo=TRUE}
+# activate example
+gr_activate <- create_complete(5) %>%
+  mutate(class = sample(c('a', 'b'), 5, TRUE)) %>%
+  activate(nodes) %>%
+  #mutate(class = sample(c('a', 'b'), 5, TRUE)) %>%
+  activate(edges) %>%
+  arrange(from)
+# see the data frame
+df.gr_activate <- as.data.frame(gr_activate)
+graph(gr_activate, 'auto') +
+  geom_edge_link(aes(alpha = stat(index)))
+
+ggraph(gr_activate, 'auto') +
+  geom_edge_link2(aes(colour = node.class))
+
+ggraph(gr, 'auto') +
+  geom_edge_link0(aes(colour = class))
+```
+ 

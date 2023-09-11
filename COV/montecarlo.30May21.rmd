@@ -1,0 +1,127 @@
+---
+title: "STM Social Network"
+author: "Barry von Tobel"
+date: "3/30/2021"
+output: 
+  html_document:
+  toc: true
+toc_float: true
+toc_collapsed: true
+number_sections: true
+toc_depth: 3
+theme: tufte::tufte_html
+# theme: lumen
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r initialize}
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph/COV")
+library(rgl)
+library(tidyr)
+library(scatterplot3d)
+library(plotly)
+libary(ggplot())
+options(rgl.printRglwidget = TRUE)
+```
+
+# Graph Examples
+
+```{r iris, echo=TRUE}
+
+
+df.cov <- read.csv("OEM_HST.csv")
+#round(cor(iris[,1:4]), 2)
+#pc.cov <- princomp(df.cov, cor=TRUE, scores=TRUE)
+summary(df.cov)
+#plot(df.cov, type="lines")
+#biplot(pc)
+plot3d(df.cov, col=rainbow(100000))
+# plot3d(x=df.cov$dx, y = df.cov$dy, z = df.cov$dz, col=rainbow(10000))
+tmp <- cbind(df.cov$x, df.cov$y,df.cov$z)
+cov(tmp)
+#plot3d(pc$scores[,1:3], col=iris$Species)
+
+```
+oem
+from: https://planspace.org/2013/02/03/pca-3d-visualization-and-clustering-in-r/
+pca3d
+
+```{r oem1, echo=TRUE}
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph/COV")
+
+library(rgl)
+#library(MonteCarlo)
+library(ggplot2)
+library(plotly)
+library(threejs)
+options(rgl.printRglwidget = TRUE)
+
+df.cov <- read.csv("OEM_1.csv")
+#round(cor(iris[,1:4]), 2)
+#pc.cov <- princomp(df.cov, cor=TRUE, scores=TRUE)
+summary(df.cov)
+#plot(df.cov, type="lines")
+#biplot(pc)
+plot3d(df.cov, col=rainbow(100000))
+# plot3d(x=df.cov$dx, y = df.cov$dy, z = df.cov$dz, col=rainbow(10000))
+tmp <- cbind(df.cov$x, df.cov$y,df.cov$z)
+cov(tmp)
+#plot3d(pc$scores[,1:3], col=iris$Species)
+
+open3d()
+  x <- (rnorm(1000))
+  y <- rnorm(1000)
+  z <- rnorm(1000, sd=0.8)
+  plot3d(x, y, z, col = rainbow(1000))
+```
+
+Monte Carlo
+https://www.analyticsvidhya.com/blog/2021/04/how-to-perform-monte-carlo-simulation/
+```{r monte1, eval=FALSE, include=FALSE}
+# https://www.rdocumentation.org/packages/MonteCarlo/versions/1.0.6
+########################################
+##      Example: t-test
+
+# Define function that generates data and applies the method of interest
+
+ttest<-function(n,loc,scale){
+  # generate sample:
+    sample<-rnorm(n, loc, scale)
+  # calculate test statistic:
+    stat<-sqrt(n)*mean(sample)/sd(sample)
+  # get test decision:
+    decision<-abs(stat)>1.96
+  # return result:
+    return(list("decision"=decision))
+}
+ #define parameter grid:
+  n_grid<-c(50,100,250,500)
+  loc_grid<-seq(0,1,0.2)
+  scale_grid<-c(1,2)
+# collect parameter grids in list:
+  param_list=list("n"=n_grid, "loc"=loc_grid, "scale"=scale_grid)
+# run simulation:
+MC_result<-MonteCarlo(func=ttest, nrep=1000, param_list=param_list)
+summary(MC_result)
+open3d()
+  x <- sort(rnorm(1000))
+  y <- rnorm(1000)
+  z <- rnorm(1000) + atan2(x, y)
+  plot3d(x, y, z, col = rainbow(1000))
+```
+
+
+```{r, basemc}
+set.seed(34)
+x <- (rnorm(n=100000, mean=0, sd= .44))
+y <- (rnorm(n=100000, mean=0, sd= 3.89))
+z <- (rnorm(n=100000, mean=0, sd= .42))
+df.plot <- data.frame(x,y,z)
+#plot3d(x, y, z, col = rainbow(10))
+#plot_ly(df.plot, type="scatter3d", mode="markers", color = I("red"))
+scatterplot3js(x,y,z, size = 0.07)
+scatterplot3js(df.cov$x, df.cov$y, df.cov$z, size=0.075, ,stroke=NULL, color="red")
+```
+
+#

@@ -1,0 +1,127 @@
+---
+title: "navadat"
+author: "Barry von Tobel"
+date: "1/18/2021"
+output: 
+  html_document:
+  toc: true
+toc_float: true
+toc_collapsed: true
+number_sections: true
+toc_depth: 3
+theme: tufte::tufte_html
+# theme: lumen
+editor_options: 
+  chunk_output_type: console
+---
+# Graph Examples
+####
+```{r initial, echo=FALSE}
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph")
+#setwd("C:/Users/bvt/Dropbox/eng_science/R/wd/tle")
+#  https://github.com/kassambara/navdata/
+#options(scipen=999)
+#Load required packages
+if(!require(devtools)) install.packages("devtools")
+devtools::install_github("kassambara/navdata")
+library("navdata")
+library("tidyverse")
+library("igraph")
+library("ggraph")
+library("tidygraph")
+
+```
+
+```{r navadata1, echo=FALSE}
+## Create Node List
+#  Get distinct source names
+sources <- phone.call %>%
+  distinct(source) %>%
+  rename(label = source)
+# Get distinct destination names
+destinations <- phone.call %>%
+  distinct(destination) %>%
+  rename(label = destination)
+# Join the two data to create node
+# Add unique ID for each country
+nodes <- full_join(sources, destinations, by = "label") 
+nodes <- nodes %>%
+  mutate(id = 1:nrow(nodes)) %>%
+  select(id, everything())
+head(nodes, 3)
+
+## Create Edges List
+# Rename the n.call column to weight
+phone.call <- phone.call %>%
+  rename(weight = n.call)
+# (a) Join nodes id for source column
+edges <- phone.call %>% 
+  left_join(nodes, by = c("source" = "label")) %>% 
+  rename(from = id)
+# (b) Join nodes id for destination column
+edges <- edges %>% 
+  left_join(nodes, by = c("destination" = "label")) %>% 
+  rename(to = id)
+# (c) Select/keep only the columns from and to
+edges <- select(edges, from, to, weight)
+head(edges, 3)
+
+## Igraph network object
+net.igraph <- graph_from_data_frame(
+  d = edges, vertices = nodes, 
+  directed = TRUE
+  )
+set.seed(123)
+# create network object with igraph
+plot(net.igraph, edge.arrow.size = 0.2,
+     layout = layout_with_graphopt)
+
+```
+
+## tidygraph and ggraph
+
+```{r tg_gg }
+#  this is a randomly generated 5*5 square matrix
+net.tidy <- tbl_graph(
+  nodes = nodes, edges = edges, directed = TRUE
+  )
+
+# Create data
+set.seed(10)
+data <- matrix(sample(0:2, 25, replace=TRUE), nrow=5)
+colnames(data) = rownames(data) = LETTERS[1:5]
+ 
+# build the graph object
+network <- graph_from_adjacency_matrix(data)
+ 
+# plot it
+plot(network)
+```
+
+
+
+```{r ggraph1}
+ #
+ggraph(net.tidy, layout = "graphopt") + 
+  geom_node_point() +
+  geom_edge_link(aes(width = weight), alpha = 0.8) + 
+  scale_edge_width(range = c(0.2, 2)) +
+  geom_node_text(aes(label = label), repel = TRUE) +
+  labs(edge_width = "phone.call") +
+  theme_graph()
+```
+
+
+```{r test1}
+
+
+```
+
+text
+```{r igraph1}
+
+```
+
+
+
+ 

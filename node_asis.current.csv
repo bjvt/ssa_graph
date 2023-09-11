@@ -1,0 +1,28 @@
+From,To,Transport,function,
+SSN,SPADOC,Classified,observations come from optical and rf sensors,USSF
+SPADOC,18th,Classified,tasks are directed to the sensors,USSF
+18th,CARA,Classified,prodcuts are developed on the high side and cross-domained to unclassified,USSF
+ST,18th,Classified,Enters unclassified and loaded to the high side,USSF
+,,,,
+AcmeSensor,SPADOC,Unclassified,,Data Integration
+MTN,SPADOC,Unclassified,,Data Integration
+AcmeSensor,SSF.DI,Unclassified,,Data Integration
+MTN,MITRE,Unclassified,,Data Integration
+,,,,
+BF,18th,Unclassified,,
+AF,18th,Unclassified,,
+BP,SSF.DI,Unclassified,,
+AP,SSF.VA,Unclassified,,
+SSF.DI,SSF.VA,Unclassified,,
+,,,,
+Eglin,SSN,Classified,,Sensor
+Altair,SSN,Classified,,Sensor
+KWAJ,SSN,Classified,,Sensor
+,,,,
+AM1,AcmeSensor,Unclassified,,Sensor
+AM2,AcmeSensor,Unclassified,,Sensor
+AM3,AcmeSensor,Unclassified,,Sensor
+,,,,
+Farish,MTN,Unclassified,,Sensor
+Yoder,MTN,Unclassified,,Sensor
+Tokyo,MTN,Unclassified,,Sensor

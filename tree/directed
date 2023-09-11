@@ -1,0 +1,43 @@
+> library(igraph)
+
+Attaching package: ‘igraph’
+
+The following objects are masked from ‘package:stats’:
+
+    decompose, spectrum
+
+The following object is masked from ‘package:base’:
+
+    union
+
+> 
+> # data
+> set.seed(1)
+> data <- matrix(sample(0:2, 15, replace=TRUE), nrow=3)
+> colnames(data) <- letters[1:5]
+> rownames(data) <- LETTERS[1:3]
+>  
+> # create the network object
+> network <- graph_from_incidence_matrix(data)
+>  
+> # plot it
+> plot(network)
+> # create data:
+> links <- data.frame(
++     source=c("A","A", "A", "A", "A","F", "B"),
++     target=c("B","B", "C", "D", "F","A","E")
++     )
+> 
+> # create the network object
+> network <- graph_from_data_frame(d=links, directed=F) 
+> 
+> # plot it
+> plot(network)
+> network <- graph_from_data_frame(d=links, directed=t) 
+Error in as.logical(directed) : 
+  cannot coerce type 'closure' to vector of type 'logical'
+> network <- graph_from_data_frame(d=links, directed=TRUE) 
+> plot(network)
+> 
+
+

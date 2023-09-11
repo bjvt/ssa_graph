@@ -1,0 +1,99 @@
+---
+title: "Graphs"
+author: "Barry von Tobel"
+date: "1/18/2021"
+output: 
+  html_document:
+  toc: true
+toc_float: true
+toc_collapsed: true
+number_sections: true
+toc_depth: 3
+theme: tufte::tufte_html
+# theme: lumen
+editor_options: 
+  chunk_output_type: console
+---
+# Graph Examples
+####
+```{r initial, echo=FALSE}
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph")
+#setwd("C:/Users/bvt/Dropbox/eng_science/R/wd/tle")
+# https://www.r-bloggers.com/2020/01/graph-theory-101-with-corruption-cases-in-spain/
+# https://rviews.rstudio.com/2019/03/06/intro-to-graph-analysis/
+# https://stats.stackexchange.com/questions/6155/graph-theory-analysis-and-visualization
+# https://cran.r-project.org/web/views/gR.html
+# https://www.r-exercises.com/2017/10/20/graph-theory-igraph-part1/?__cf_chl_jschl_tk__=bf96d3b3ca32b5083b42fae2f46bd922b01f6c53-1610989418-0-AdEIGbxSDkac8gDVrtiFVGFERE_y75rV_pSceSsbxdyjbQr_ZIHFTso222EwDHV6S8XC__5svuplM76ri2plpHBWeVIQIrvN-gbSYMdDm8enJoVFzHGMwEzOFIz0RRLcjCQoqT8O3y58oCqRFzbZ5-ACMyjRx_IeBgX8pzg1GfpdTS2p_ncBTitHgt_pKFPrObCjCkKHz8aHsw-aO-04J4e5Oiz5g4Ib8yWfQfe0X1M9lppDehfH9TQhDnnP6iHXTbG4ItQ7M7yjtjTGN7c9ZoTES4Sms9iUtbH6Ysn0qcy6jKeofRVymUZ-PaecTLaMTnAkSQRiFSF8Ol5G184NPaXNpMqH6qfu-JTR0bmHhS4O
+# https://www.r-exercises.com/tag/igraph-visualizations/
+# https://www.tutorialspoint.com/graph_theory/types_of_graphs.htm
+# https://www.r-bloggers.com/2016/09/turning-keywords-into-a-co-occurrence-network/ very technical
+# https://eehh-stanford.github.io/SNA-workshop/intro-igraph.html
+# http://r-israel.com/wp-content/uploads/2014/12/r-igraph-workshop_final.pdf
+###-----------###
+options(scipen=999)
+#Load required packages
+
+library(readr)
+library(tidygraph)
+library(igraph)
+```
+
+```{r trains, echo=FALSE}
+
+url <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-02-26/small_trains.csv"
+small_trains <- read.csv(url)
+
+```
+
+## test1
+```{r test1}
+#https://www.r-graph-gallery.com/257-input-formats-for-network-charts.html
+library(igraph)
+
+# Create data
+set.seed(10)
+data <- matrix(sample(0:2, 25, replace=TRUE), nrow=5)
+colnames(data) = rownames(data) = LETTERS[1:5]
+ 
+# build the graph object
+network <- graph_from_adjacency_matrix(data)
+ 
+# plot it
+plot(network)
+```
+
+
+
+```{r graph1}
+
+#https://rviews.rstudio.com/2019/03/06/intro-to-graph-analysis/ - also discusses other packages
+x <- 2
+print(x)
+
+
+
+ 
+ # https://www.data-imaginist.com/2017/ggraph-introduction-layouts/
+ x <- 3
+ print(x)
+ 
+```
+
+
+```{r test1}
+
+
+```
+
+text
+```{r igraph1}
+# https://stats.stackexchange.com/questions/6155/graph-theory-analysis-and-visualization
+adj.mat <- matrix(sample(c(0,1), 9, replace=TRUE), nr=3)
+g <- graph.adjacency(adj.mat)
+plot(g)
+
+```
+
+
+
+ 

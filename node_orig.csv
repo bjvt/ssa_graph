@@ -1,0 +1,41 @@
+from,to,Transport,Description,ICD Interfaces
+Altair,SSN,Classified,Legacy Connection,ADCCP
+Eglin,SSN,Classified,Legacy Connection,ADCCP
+KWAJ,SSN,Classified,Legacy Connection,ADCCP
+Farish,MTN,UnClassified,Telescope,"ftp, rest, http"
+Yoder,MTN,UnClassified,Telescope,"ftp, rest, http"
+Tokyo,MTN,UnClassified,Telescope,"ftp, rest, http"
+AM1,Acme Sensors,UnClassified,Intranet usually,various
+AM2,Acme Sensors,UnClassified,Intranet usually,various
+AM3,Acme Sensors,UnClassified,Intranet usually,various
+SSN,USSF,Classified,,
+Acme Sensors,USSF,UnClassified,,
+Acme Sensors,OADR,UnClassified,,
+Acme Sensors,Acme Data,UnClassified,,
+MTN,USSF,UnClassified,,
+MTN,OADR,UnClassified,,
+MTN,MITRE,UnClassified,,
+USSF,18th,Classified,,
+18th,NOAA,Classified,,
+USSF,OADR,UnClassified,,
+OADR,NOAA,UnClassified,,
+OADR,Acme Services,UnClassified,,
+Acme Data,Acme Services,UnClassified,,
+MITRE,NOAA,UnClassified,,
+NOAA,Acme Services,UnClassified,,
+OADR,BF,UnClassified,,
+Acme Data,BP,UnClassified,,
+Acme Services,AP,UnClassified,,
+NOAA,AF,UnClassified,,
+18th,AG,UnClassified,,
+BP,Customer,UnClassified,,
+BF,Customer,UnClassified,,
+AP,Customer,UnClassified,,
+AF,Customer,UnClassified,,
+AG,Customer,UnClassified,,
+MITRE,NOAA,UnClassified,,
+Acme Data,18th,UnClassified,,
+18th,CspOC,Classified,,
+NOAA,OSC,Classified,,
+CspOC,USA,Classified,,
+OSC,USA,Classified,,

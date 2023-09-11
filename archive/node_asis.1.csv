@@ -1,0 +1,17 @@
+from,to,Transport,Description,ICD Interfaces
+SPADOC,18th,Classified,,
+SSN,SPADOC,Classified,,
+Altair,SSN,Classified,Legacy Connection,ADCCP
+Eglin,SSN,Classified,Legacy Connection,ADCCP
+KWAJ,SSN,Classified,Legacy Connection,ADCCP
+NOAA,Customer,UnClassified,,
+18th,CARA,UnClassified,,
+18th,SPACECOM,UnClassified,,
+18th,space track,UnClassified,,
+AF,space track,UnClassified,,
+BF,space track,UnClassified,,
+AF,Customer,UnClassified,,
+BF,Customer,UnClassified,,
+AP,Customer,UnClassified,,
+AP,ACME1,UnClassified,,
+Public,Customer,UnClassified,,

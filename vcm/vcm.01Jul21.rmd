@@ -1,0 +1,239 @@
+---
+title: "STM Social Network"
+author: "Barry von Tobel"
+date: "3/30/2021"
+output: 
+  html_document:
+  toc: true
+toc_float: true
+toc_collapsed: true
+number_sections: true
+toc_depth: 3
+theme: tufte::tufte_html
+# theme: lumen
+editor_options: 
+  chunk_output_type: console
+---
+# Graph Examples
+
+initial
+
+```{r initial}
+library(rgl)
+options(rgl.printRglwidget = TRUE)
+library(webshot
+        )
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph/vcm")
+# if glxinfo is not installed in your system, then install it first by executing the following command on a Terminal: sudo apt install mesa-utils
+
+
+```
+
+
+iris
+from: https://planspace.org/2013/02/03/pca-3d-visualization-and-clustering-in-r/
+pca3d
+```{r iris1, eval=FALSE, include=FALSE}
+data(iris)
+# this is a little tweak so that things line up nicely later on
+iris$Species <- factor(iris$Species,
+                       levels = c("versicolor","virginica","setosa"))
+head(iris)
+round(cor(iris[,1:4]), 2)
+pc <- princomp(iris[,1:4], cor=TRUE, scores=TRUE)
+summary(pc)
+plot(pc, type="lines")
+biplot(pc)
+library(rgl)
+plot3d(pc$scores[,1:3])
+plot3d(pc$scores, col=rainbow(50))
+
+#plot3d(pc$scores[,1:3], col=iris$Species)
+
+open3d()
+  x <- sort(rnorm(1000))
+  y <- rnorm(1000)
+  z <- rnorm(1000) + atan2(x, y)
+  plot3d(x, y, z, col = rainbow(1000))
+```
+
+```{r iris2, eval=FALSE, include=FALSE}
+data(iris)
+x <- sep.l <- iris$Sepal.Length
+y <- pet.l <- iris$Petal.Length
+z <- sep.w <- iris$Sepal.Width
+rgl.open() # Open a new RGL device
+rgl.points(x, y, z, color ="lightgray") # Scatter plot
+
+```
+
+ellipse of concentration
+
+```{r ellipse, eval=FALSE, include=FALSE}
+# load dataset
+df.cov <- read.csv("OEM_spheres.csv")
+
+summary(df.cov)
+#plot3d(df.cov, col=rainbow(100000))
+cov.num <- cbind(df.cov$x, df.cov$y,df.cov$z)
+
+cov(cov.num)
+#plot3d(pc$scores[,1:3], col=iris$Species)
+ellipse3d(x, scale = c(1,1,1), centre = c(0,0,0), level = 0.95, ...)
+
+#rgl_init()
+rgl.spheres(df.cov$x, df.cov$y, df.cov$z, r = 0.002, color = "#D95F02") 
+#rgl_add_axes(x, y, z, show.bbox = TRUE)
+# Compute and draw the ellipse of concentration
+# ellips <- ellipse3d(cov(cbind(x,y,z)), centre=c(mean(x), mean(y), mean(z)), level = 0.95)
+#shade3d(ellips, col = "#D95F02", alpha = 0.1, lit = FALSE)
+#aspect3d(1,1,1)
+
+tmp2 <- ellipse3d(cov.num)
+shade3d(tmp2, centre=c(mean(df.cov$x), mean(df.cov$y), mean(df.cov$z)), level = 0.95)
+tmp2 <- ellipse3d(cov.num)
+shade3d(tmp2,col = "blue", alpha = 0.1, lit = FALSE)
+
+ellips <- ellipse3d(cov(cbind(x,y,z)), 
+            centre=c(mean(x), mean(y), mean(z)), level = 0.95)
+shade3d(ellips, col = "#D95F02", alpha = 0.1, lit = FALSE)
+aspect3d(1,1,1)
+
+```
+
+Scratch
+
+```{r scratch, eval=FALSE, 1 echo=TRUE, include=FALSE}
+mat.cov1 <- as.matrix(read.csv("cov.222861.csv"))
+
+
+
+
+elli <- ellipse3d(df.mat)
+
+shade3d(elli)
+wire3d(elli)
+
+```
+
+
+```{r scratch2, eval=FALSE, include=FALSE}
+# https://stackoverflow.com/questions/42766569/how-toelp-convert-ellipsoid-to-mesh3d-in-r
+library(rgl)
+library(cluster)
+open3d()
+
+ellipsoid3d <- function(cen, a = 1,b = 1,c = 1,n = 65, ...){
+  f <- function(s,t){ 
+    cbind(   a * cos(t)*cos(s) + cen[1],
+             b *        sin(s) + cen[2],
+             c * sin(t)*cos(s) + cen[3])
+  }
+  persp3d(f, slim = c(-pi/2,pi/2), tlim = c(0, 2*pi), n = n, add = T, ...)
+}
+
+set.seed(122)
+n <- 3
+for (i in 1:n){
+   cen <- 3*runif(3)
+   a <- runif(1)
+   b <- runif(1)
+   c <- runif(1)
+
+   clr <- c("red","blue","green")[i %% 3 + 1 ]
+   elpf <- ellipsoid3d(cen,a=a,b=b,c=c,col=clr,alpha=0.5)
+}
+
+elpf
+
+open3d()
+plot3d( cube3d(col = "green") )
+M <- par3d("userMatrix")
+if (!rgl.useNULL())
+  play3d( par3dinterp(time = (0:2)*0.75, userMatrix = list(M,
+                                     rotate3d(M, pi/2, 1, 0, 0),
+                                     rotate3d(M, pi/2, 0, 1, 0) ) ), 
+        duration = 3 )
+## Not run: 
+movie3d( spin3d(), duration = 5 )
+
+## End(Not run)
+
+library(rgl)
+
+nobs<-10
+x<-runif(nobs)
+y<-runif(nobs)
+z<-runif(nobs)
+df<-data.frame(x,y,z)
+
+plot3d(df, type = "n" ) 
+id <- NA
+myplotfunction<-function(time) {
+  index <- round(time)
+  # For a 3x faster display, use index <- round(3*time)
+  # To cycle through the points several times, use 
+  # index <- round(3*time) %% nobs + 1
+  if (!is.na(id))
+    pop3d(id = id) # Delete previous item
+  id <<- spheres3d(df[index,], r=0.025)
+  list()
+}
+
+play3d(myplotfunction, startTime = 1, duration = nobs - 1)
+movie3d(myplotfunction, startTime = 1, duration = nobs - 1, fps = 1)
+```
+
+
+````{r ellipsoid1}
+
+library(rgl)
+# also need to install webroot2 and chromate, remotes::install_github("rstudio/chromote")
+# Plot a random sample and an ellipsoid of concentration corresponding to a 95% 
+# probability region for a
+# trivariate normal distribution with mean 0, unit variances and 
+# correlation 0.8.
+if (requireNamespace("MASS")) {
+  #Sigma <- matrix(c(10, 3, 0, 3, 2, 0, 0, 0, 1), 3, 3)
+  cov.22286 <- as.matrix(read.csv("cov.22286.1.csv"))
+  cov.28358 <- as.matrix(read.csv("cov.28358.1.csv"))
+
+  Mean <- 1:3
+  x1 <- MASS::mvrnorm(100, Mean, cov.22286)
+  x2 <- MASS::mvrnorm(100, Mean + 0.4, cov.28358)
+
+  cen <- 2*runif(2)
+}
+  open3d()
+  plot3d(x1, box = FALSE, add=TRUE)
+  plot3d(x2, box = FALSE, add=TRUE)
+  
+  plot3d( ellipse3d(cov.22286, centre = Mean), col = "green", alpha = 0.2, add = TRUE)
+  plot3d( ellipse3d(cov.28358, centre = Mean +.4), col = "red", alpha = 0.2, add = TRUE)
+  wire3d(ellipse3d(cov.22286, centre = Mean ), col = "black", alpha = 0.2, add = TRUE)
+  wire3d(ellipse3d(cov.28358, centre = Mean +.4), col = "black", alpha = 0.2, add = TRUE)
+  
+  aspect3d(1,1,1)
+  
+  movie3d(spin3d(axis = c(0,0,1), rpm = 4), duration = 1, fps = 50, convert = FALSE, clean = FALSE, dir=getwd())
+
+# Create a movie
+  movie3d(spin3d(axis = c(0, 0, 1)), duration = 1, fps = 50,dir = getwd(), clean = FALSE)
+  #play3d(spin3d(axis = c(0, 0, 1)), duration = 3)
+  
+#planes3d(ellipse3d(cov.28358, centre = Mean +.4), col = "black", alpha = 0.2, add = TRUE)
+#clipplanes3d(ellipse3d(cov.28358, centre = Mean +.4), col = "black", alpha = 0.2, add = TRUE))
+
+# Plot the estimate and joint 90% confidence region for the displacement and cylinder
+# count linear coefficients in the mtcars dataset
+
+data(mtcars)
+fit <- lm(mpg ~ disp + cyl , mtcars)
+
+open3d()
+#plot3d(ellipse3d(fit, level = 0.5
+                 #0), col = "blue", alpha = 0.5, aspect = TRUE)
+
+
+````
+

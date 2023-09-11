@@ -1,0 +1,100 @@
+---
+title: "STM Social Network"
+author: "Barry von Tobel"
+date: "3/30/2021"
+output: 
+  html_document:
+  toc: true
+toc_float: true
+toc_collapsed: true
+number_sections: true
+toc_depth: 3
+theme: tufte::tufte_html
+# theme: lumen
+editor_options: 
+  chunk_output_type: console
+---
+# Graph Examples
+
+initial
+
+```{r initial}
+library(rgl)
+options(rgl.printRglwidget = TRUE)
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph/COV")
+
+
+```
+
+
+iris
+from: https://planspace.org/2013/02/03/pca-3d-visualization-and-clustering-in-r/
+pca3d
+```{r iris1, eval=FALSE, include=FALSE}
+data(iris)
+# this is a little tweak so that things line up nicely later on
+iris$Species <- factor(iris$Species,
+                       levels = c("versicolor","virginica","setosa"))
+head(iris)
+round(cor(iris[,1:4]), 2)
+pc <- princomp(iris[,1:4], cor=TRUE, scores=TRUE)
+summary(pc)
+plot(pc, type="lines")
+biplot(pc)
+library(rgl)
+plot3d(pc$scores[,1:3])
+plot3d(pc$scores, col=rainbow(50))
+
+#plot3d(pc$scores[,1:3], col=iris$Species)
+
+open3d()
+  x <- sort(rnorm(1000))
+  y <- rnorm(1000)
+  z <- rnorm(1000) + atan2(x, y)
+  plot3d(x, y, z, col = rainbow(1000))
+```
+
+```{r iris2, eval=FALSE, include=FALSE}
+data(iris)
+x <- sep.l <- iris$Sepal.Length
+y <- pet.l <- iris$Petal.Length
+z <- sep.w <- iris$Sepal.Width
+rgl.open() # Open a new RGL device
+rgl.points(x, y, z, color ="lightgray") # Scatter plot
+
+```
+
+ellipse of concentration
+
+```{r ellipse, echo=TRUE}
+#http://www.sthda.com/english/wiki/a-complete-guide-to-3d-visualization-device-system-in-r-r-software-and-data-visualization#add-an-ellipse-of-concentration
+# load dataset
+df.cov <- read.csv("OEM_spheres.csv")
+
+summary(df.cov)
+#plot3d(df.cov, col=rainbow(100000))
+cov.num <- cbind(df.cov$x, df.cov$y,df.cov$z)
+
+cov(cov.num)
+#plot3d(pc$scores[,1:3], col=iris$Species)
+ellipse3d(x, scale = c(1,1,1), centre = c(0,0,0), level = 0.95, ...)
+
+#rgl_init()
+rgl.spheres(df.cov$x, df.cov$y, df.cov$z, r = 0.002, color = "#D95F02") 
+#rgl_add_axes(x, y, z, show.bbox = TRUE)
+# Compute and draw the ellipse of concentration
+# ellips <- ellipse3d(cov(cbind(x,y,z)), centre=c(mean(x), mean(y), mean(z)), level = 0.95)
+#shade3d(ellips, col = "#D95F02", alpha = 0.1, lit = FALSE)
+#aspect3d(1,1,1)
+
+tmp2 <- ellipse3d(cov.num)
+shade3d(tmp2, centre=c(mean(df.cov$x), mean(df.cov$y), mean(df.cov$z)), level = 0.95)
+tmp2 <- ellipse3d(cov.num)
+shade3d(tmp2,col = "blue", alpha = 0.1, lit = FALSE)
+
+ellips <- ellipse3d(cov(cbind(x,y,z)), 
+            centre=c(mean(x), mean(y), mean(z)), level = 0.95)
+shade3d(ellips, col = "#D95F02", alpha = 0.1, lit = FALSE)
+aspect3d(1,1,1)
+
+```

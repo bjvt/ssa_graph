@@ -1,0 +1,81 @@
+---
+title: "STM Social Network"
+author: "Barry von Tobel"
+date: "3/30/2021"
+output: 
+  html_document:
+  toc: true
+toc_float: true
+toc_collapsed: true
+number_sections: true
+toc_depth: 3
+theme: tufte::tufte_html
+# theme: lumen
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r initialize}
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph/COV")
+library(rgl)
+options(rgl.printRglwidget = TRUE)
+```
+
+# Graph Examples
+
+```{r iris, echo=TRUE}
+
+
+df.cov <- read.csv("OEM_1.csv")
+#round(cor(iris[,1:4]), 2)
+#pc.cov <- princomp(df.cov, cor=TRUE, scores=TRUE)
+summary(df.cov)
+#plot(df.cov, type="lines")
+#biplot(pc)
+plot3d(df.cov, col=rainbow(100000))
+# plot3d(x=df.cov$dx, y = df.cov$dy, z = df.cov$dz, col=rainbow(10000))
+tmp <- cbind(df.cov$x, df.cov$y,df.cov$z)
+cov(tmp)
+#plot3d(pc$scores[,1:3], col=iris$Species)
+
+```
+oem
+from: https://planspace.org/2013/02/03/pca-3d-visualization-and-clustering-in-r/
+pca3d
+
+```{r oem1, echo=TRUE}
+setwd("/home/bvt/Dropbox/eng_science/R/wd/graph/COV")
+
+library(rgl)
+options(rgl.printRglwidget = TRUE)
+
+df.cov <- read.csv("OEM_1.csv")
+#round(cor(iris[,1:4]), 2)
+#pc.cov <- princomp(df.cov, cor=TRUE, scores=TRUE)
+summary(df.cov)
+#plot(df.cov, type="lines")
+#biplot(pc)
+plot3d(df.cov, col=rainbow(100000))
+# plot3d(x=df.cov$dx, y = df.cov$dy, z = df.cov$dz, col=rainbow(10000))
+tmp <- cbind(df.cov$x, df.cov$y,df.cov$z)
+cov(tmp)
+#plot3d(pc$scores[,1:3], col=iris$Species)
+
+open3d()
+  x <- sort(rnorm(1000))
+  y <- rnorm(1000)
+  z <- rnorm(1000) + atan2(x, y)
+  plot3d(x, y, z, col = rainbow(1000))
+```
+
+Monte Carlo
+https://www.analyticsvidhya.com/blog/2021/04/how-to-perform-monte-carlo-simulation/
+```{r monte1, echo=TRUE}
+
+
+open3d()
+  x <- sort(rnorm(1000))
+  y <- rnorm(1000)
+  z <- rnorm(1000) + atan2(x, y)
+  plot3d(x, y, z, col = rainbow(1000))
+```
